@@ -8,7 +8,23 @@ namespace ImiImport
     {
         static void Main(string[] args)
         {
-            dynamic obj = JObject.Parse(System.IO.File.ReadAllText(args[0]));
+            if (args.Length < 1)
+            {
+                Console.WriteLine("Usage: ImiImport.exe favorites.imixch > favorites.tsv");
+                return;
+            }
+
+            dynamic obj;
+            try
+            {
+                obj = JObject.Parse(System.IO.File.ReadAllText(args[0]));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to parse file [{0}]. Error: [{1}]", args[0], ex.Message);
+                return;
+            }
+
             var items = obj?.lists?[0]?.list?.items;
 
             Console.OutputEncoding = Encoding.UTF8;
